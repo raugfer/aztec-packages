@@ -22,6 +22,7 @@
 #include "barretenberg/stdlib/client_ivc_verifier/client_ivc_recursive_verifier.hpp"
 #include "barretenberg/stdlib_circuit_builders/ultra_flavor.hpp"
 #include "barretenberg/stdlib_circuit_builders/ultra_keccak_flavor.hpp"
+#include "barretenberg/stdlib_circuit_builders/ultra_starknet_flavor.hpp"
 #include "barretenberg/vm/avm/trace/public_inputs.hpp"
 
 #ifndef DISABLE_AZTEC_VM
@@ -716,7 +717,8 @@ UltraProver_<Flavor> compute_valid_prover(const std::string& bytecodePath,
     using Prover = UltraProver_<Flavor>;
 
     bool honk_recursion = false;
-    if constexpr (IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor, UltraRollupFlavor>) {
+    if constexpr (IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor, UltraStarknetFlavor>, UltraRollupFlavor>) {
+    if constexpr (IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor) {
         honk_recursion = true;
     }
     auto constraint_system = get_constraint_system(bytecodePath, honk_recursion);
@@ -1061,7 +1063,7 @@ void prove_honk_output_all(const std::string& bytecodePath,
     using VerificationKey = Flavor::VerificationKey;
 
     bool honk_recursion = false;
-    if constexpr (IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor>) {
+    if constexpr (IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor, UltraStarknetFlavor>) {
         honk_recursion = true;
     }
 
@@ -1203,6 +1205,9 @@ int main(int argc, char* argv[])
         } else if (command == "prove_ultra_keccak_honk_output_all") {
             std::string output_path = get_option(args, "-o", "./proofs/proof");
             prove_honk_output_all<UltraKeccakFlavor>(bytecode_path, witness_path, output_path, recursive);
+        } else if (command == "prove_ultra_starknet_honk_output_all") {
+            std::string output_path = get_option(args, "-o", "./proofs/proof");
+            prove_honk_output_all<UltraStarknetFlavor>(bytecode_path, witness_path, output_path, recursive);
         } else if (command == "prove_mega_honk_output_all") {
             std::string output_path = get_option(args, "-o", "./proofs");
             prove_honk_output_all<MegaFlavor>(bytecode_path, witness_path, output_path, recursive);
@@ -1260,6 +1265,9 @@ int main(int argc, char* argv[])
         } else if (command == "prove_ultra_keccak_honk") {
             std::string output_path = get_option(args, "-o", "./proofs/proof");
             prove_honk<UltraKeccakFlavor>(bytecode_path, witness_path, output_path, recursive);
+        } else if (command == "prove_ultra_starknet_honk") {
+            std::string output_path = get_option(args, "-o", "./proofs/proof");
+            prove_honk<UltraStarknetFlavor>(bytecode_path, witness_path, output_path, recursive);
         } else if (command == "prove_ultra_rollup_honk") {
             std::string output_path = get_option(args, "-o", "./proofs/proof");
             prove_honk<UltraRollupFlavor>(bytecode_path, witness_path, output_path, recursive);
@@ -1267,12 +1275,17 @@ int main(int argc, char* argv[])
             return verify_honk<UltraFlavor>(proof_path, vk_path) ? 0 : 1;
         } else if (command == "verify_ultra_keccak_honk") {
             return verify_honk<UltraKeccakFlavor>(proof_path, vk_path) ? 0 : 1;
+        } else if (command == "verify_ultra_starknet_honk") {
+            return verify_honk<UltraStarknetFlavor>(proof_path, vk_path) ? 0 : 1;
         } else if (command == "write_vk_ultra_honk") {
             std::string output_path = get_option(args, "-o", "./target/vk");
             write_vk_honk<UltraFlavor>(bytecode_path, output_path, recursive);
         } else if (command == "write_vk_ultra_keccak_honk") {
             std::string output_path = get_option(args, "-o", "./target/vk");
             write_vk_honk<UltraKeccakFlavor>(bytecode_path, output_path, recursive);
+        } else if (command == "write_vk_ultra_starknet_honk") {
+            std::string output_path = get_option(args, "-o", "./target/vk");
+            write_vk_honk<UltraStarknetFlavor>(bytecode_path, output_path, recursive);
         } else if (command == "write_vk_ultra_rollup_honk") {
             std::string output_path = get_option(args, "-o", "./target/vk");
             write_vk_honk<UltraRollupFlavor>(bytecode_path, output_path, recursive);
@@ -1296,6 +1309,9 @@ int main(int argc, char* argv[])
         } else if (command == "vk_as_fields_ultra_keccak_honk") {
             std::string output_path = get_option(args, "-o", vk_path + "_fields.json");
             vk_as_fields_honk<UltraKeccakFlavor>(vk_path, output_path);
+        } else if (command == "vk_as_fields_ultra_starknet_honk") {
+            std::string output_path = get_option(args, "-o", vk_path + "_fields.json");
+            vk_as_fields_honk<UltraStarknetFlavor>(vk_path, output_path);
         } else if (command == "vk_as_fields_ultra_rollup_honk") {
             std::string output_path = get_option(args, "-o", vk_path + "_fields.json");
             vk_as_fields_honk<UltraRollupFlavor>(vk_path, output_path);
