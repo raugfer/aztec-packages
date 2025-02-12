@@ -708,6 +708,7 @@ UltraProver_<Flavor> compute_valid_prover(const std::string& bytecodePath,
     using Builder = Flavor::CircuitBuilder;
     using Prover = UltraProver_<Flavor>;
 
+    constexpr bool honk_recursion = IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor, UltraStarknetFlavor, UltraRollupFlavor>;
     const acir_format::ProgramMetadata metadata{ .recursive = recursive, .honk_recursion = honk_recursion };
 
     acir_format::AcirProgram program{ get_constraint_system(bytecodePath, metadata.honk_recursion) };
@@ -1047,6 +1048,7 @@ void prove_honk_output_all(const std::string& bytecodePath,
     using Prover = UltraProver_<Flavor>;
     using VerificationKey = Flavor::VerificationKey;
 
+    constexpr bool honk_recursion = IsAnyOf<Flavor, UltraFlavor, UltraKeccakFlavor, UltraStarknetFlavor>;
     const acir_format::ProgramMetadata metadata{ .recursive = recursive, .honk_recursion = honk_recursion };
 
     acir_format::AcirProgram program{ get_constraint_system(bytecodePath, metadata.honk_recursion),
