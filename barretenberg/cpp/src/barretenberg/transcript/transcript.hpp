@@ -563,7 +563,7 @@ inline bb::fr poseidon_hash_uint256(std::vector<bb::fr> const& data)
     return result_fr;
 }
 
-struct PoseidonTranscriptParams {
+struct StarknetTranscriptParams {
     using Fr = bb::fr;
     using Proof = HonkProof;
 
@@ -593,6 +593,6 @@ struct PoseidonTranscriptParams {
     }
 };
 
-using PoseidonTranscript = BaseTranscript<PoseidonTranscriptParams>;
+using StarknetTranscript = BaseTranscript<StarknetTranscriptParams>;
 
 } // namespace bb
