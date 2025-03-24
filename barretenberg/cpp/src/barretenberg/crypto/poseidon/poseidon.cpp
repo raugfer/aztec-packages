@@ -90,7 +90,7 @@ PoseidonHash poseidon_stark252(const std::vector<uint8_t>& input)
         //elems[2 * (1 + k) + 0] = limb0;
         //elems[2 * (1 + k) + 1] = limb1;
 
-        state[0] += limb0;
+        state[2] += limb0;
         state[1] += limb1;
 
         state = Permutation::permutation(state);
@@ -102,7 +102,7 @@ PoseidonHash poseidon_stark252(const std::vector<uint8_t>& input)
     //std::cout << output2 << std::endl;
     //std::cout << state[0] << std::endl;
 
-    std::vector<uint8_t> digest = to_buffer(state[0]);
+    std::vector<uint8_t> digest = to_buffer(state[2]);
 
     PoseidonHash result;
     for (size_t i = 0; i < 32; ++i) {
